@@ -67,7 +67,7 @@ export default function AboutSection() {
             <div className="relative aspect-[4/5] overflow-hidden">
               <Image
                 src="/images/about-gym.jpg"
-                alt="Elite Gains Gym Interior"
+                alt="One Rep Max Gym Interior"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"

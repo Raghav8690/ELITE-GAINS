@@ -2,7 +2,7 @@ import type { Trainer, PricingPlan, GalleryImage } from "@/types";
 
 // ─── Site Config ───────────────────────────────────────────────
 export const SITE_CONFIG = {
-  name: "ELITE GAINS",
+  name: "One Rep Max",
   tagline: "PUSH BEYOND YOUR LIMITS",
   subTagline:
     "Experience the pinnacle of high-performance training in a luxury environment designed for elite results.",

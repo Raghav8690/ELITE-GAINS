@@ -54,7 +54,7 @@ export default function Navbar() {
               <div className="absolute inset-0 bg-yellow-500/40 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-heading text-xl tracking-widest text-white">
-              ELITE <span className="text-yellow-500">GAINS</span>
+              One  <span className="text-yellow-500">Rep Max</span>
             </span>
           </motion.a>
 
