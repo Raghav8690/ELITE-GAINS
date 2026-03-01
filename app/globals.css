@@ -1,0 +1,257 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  --yellow: #ffc107;
+  --yellow-bright: #ffca28;
+  --yellow-dim: #ffb300;
+  --black: #000000;
+  --dark-800: #0a0a0a;
+  --dark-700: #111111;
+  --dark-600: #1a1a1a;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 193, 7, 0.15);
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffc107;
+  border-radius: 3px;
+}
+
+/* ─── Custom Utilities ──────────────────────────────────────── */
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading), sans-serif;
+  }
+
+  .text-yellow {
+    color: var(--yellow);
+  }
+
+  .bg-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glow-yellow {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.4), 0 0 40px rgba(255, 193, 7, 0.1);
+  }
+
+  .glow-yellow-text {
+    text-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+  }
+
+  .gradient-yellow-black {
+    background: linear-gradient(135deg, #ffc107 0%, #000 60%);
+  }
+
+  .section-divider {
+    background: linear-gradient(90deg, transparent, #ffc107, transparent);
+    height: 1px;
+    width: 100%;
+  }
+
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* ─── Glow Button ─────────────────────────────────────────────── */
+.btn-glow {
+  position: relative;
+  background: #ffc107;
+  color: #000;
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: 0.1em;
+  font-size: 1.1rem;
+  padding: 14px 36px;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+.btn-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ffca28, #ff8f00);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-glow:hover::before {
+  opacity: 1;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 30px rgba(255, 193, 7, 0.6), 0 0 60px rgba(255, 193, 7, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-glow span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Outline Button ─────────────────────────────────────────── */
+.btn-outline {
+  position: relative;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: 0.1em;
+  font-size: 1.1rem;
+  padding: 13px 36px;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: #ffc107;
+  color: #ffc107;
+  box-shadow: 0 0 20px rgba(255, 193, 7, 0.2);
+}
+
+/* ─── Section Heading ────────────────────────────────────────── */
+.section-tag {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffc107;
+}
+
+/* ─── Trainer Card Hover ─────────────────────────────────────── */
+.trainer-card:hover .trainer-overlay {
+  opacity: 1;
+}
+
+.trainer-card:hover .trainer-img {
+  transform: scale(1.05);
+}
+
+/* ─── Pricing Card ───────────────────────────────────────────── */
+.pricing-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+}
+
+/* ─── Countdown ─────────────────────────────────────────────── */
+.countdown-unit {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* ─── Masonry Gallery ────────────────────────────────────────── */
+.masonry-grid {
+  columns: 3 200px;
+  column-gap: 8px;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .masonry-grid {
+    columns: 2 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .masonry-grid {
+    columns: 1;
+  }
+}
+
+/* ─── WhatsApp Float ─────────────────────────────────────────── */
+.whatsapp-float {
+  animation: whatsappPulse 2s ease-in-out infinite;
+}
+
+@keyframes whatsappPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+}
+
+/* ─── Map ─────────────────────────────────────────────────── */
+.map-container {
+  filter: grayscale(100%) invert(90%) contrast(90%);
+}
+
+/* ─── Lightbox custom ────────────────────────────────────────── */
+.yarl__root {
+  --yarl__color_backdrop: rgba(0, 0, 0, 0.95);
+}
+
+/* ─── Form Focus ─────────────────────────────────────────────── */
+.form-input:focus {
+  outline: none;
+  border-color: #ffc107;
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.15);
+}
+
+/* ─── Animated Underline ─────────────────────────────────────── */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ffc107;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
