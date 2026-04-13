@@ -3,29 +3,101 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import gsap from "gsap";
 import { SITE_CONFIG } from "@/lib/data";
+import GlitchText from "@/components/effects/GlitchText";
 
 export default function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!headingRef.current) return;
+
+    const tl = gsap.timeline({ delay: 2 });
+
+    // Animate heading words
+    const words = headingRef.current.querySelectorAll(".hero-word");
+    tl.fromTo(
+      words,
+      { y: 120, opacity: 0, rotateX: -45 },
+      { y: 0, opacity: 1, rotateX: 0, duration: 1, stagger: 0.15, ease: "power3.out" }
+    );
+
+    // Animate sub elements
+    tl.fromTo(
+      ".hero-sub",
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" },
+      "-=0.3"
+    );
+
+    tl.fromTo(
+      ".hero-cta",
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power2.out" },
+      "-=0.3"
+    );
+
+    tl.fromTo(
+      ".hero-stat",
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out" },
+      "-=0.2"
+    );
+
+    // Parallax on scroll
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const scrollY = window.scrollY;
+      const bg = sectionRef.current.querySelector(".hero-bg") as HTMLElement;
+      if (bg) {
+        bg.style.transform = `translateY(${scrollY * 0.3}px) scale(1.1)`;
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background Image */}
+      {/* Background Image with Parallax */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/hero-bg.jpg"
-          alt="Elite Gains Gym"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        {/* Gradient overlays for cinematic feel */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60" />
-        {/* Yellow atmospheric glow */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
+        <div className="hero-bg absolute inset-0 will-change-transform" style={{ transform: "scale(1.1)" }}>
+          <Image
+            src="/images/hero-bg.jpg"
+            alt="One Rep Max Gym"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/70" />
+
+        {/* Animated vertical lines */}
+        <div className="absolute inset-0 overflow-hidden opacity-[0.03]">
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute top-0 w-[1px] h-full bg-yellow-500"
+              style={{ left: `${12.5 * (i + 1)}%` }}
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              transition={{ delay: 2.5 + i * 0.1, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+          ))}
+        </div>
+
+        {/* Bottom glow line */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-500/60 to-transparent" />
       </div>
 
       {/* Content */}
@@ -33,51 +105,48 @@ export default function HeroSection() {
         <div className="max-w-3xl">
           {/* Tag line */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-3 mb-6"
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: "auto" }}
+            transition={{ duration: 0.8, delay: 1.8 }}
+            className="flex items-center gap-3 mb-6 overflow-hidden"
           >
-            <div className="h-[1px] w-12 bg-yellow-500" />
-            <span className="section-tag">ELITE PERFORMANCE TRAINING</span>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 48 }}
+              transition={{ duration: 0.6, delay: 2.2 }}
+              className="h-[1px] bg-yellow-500"
+            />
+            <span className="section-tag whitespace-nowrap">ELITE PERFORMANCE TRAINING</span>
           </motion.div>
 
-          {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="font-heading text-[clamp(4rem,12vw,9rem)] leading-[0.9] tracking-wide text-white mb-4"
-          >
-            PUSH
-            <br />
-            <span className="text-yellow-500 glow-yellow-text">BEYOND</span>
-            <br />
-            YOUR LIMITS
-          </motion.h1>
+          {/* Main Heading - GSAP animated */}
+          <div ref={headingRef} className="font-heading text-[clamp(4rem,12vw,9rem)] leading-[0.9] tracking-wide text-white mb-4" style={{ perspective: "600px" }}>
+            <div className="overflow-hidden">
+              <span className="hero-word inline-block opacity-0">PUSH</span>
+            </div>
+            <div className="overflow-hidden">
+              <GlitchText
+                text="BEYOND"
+                className="hero-word inline-block opacity-0 text-yellow-500 glow-yellow-text"
+              />
+            </div>
+            <div className="overflow-hidden">
+              <span className="hero-word inline-block opacity-0">YOUR LIMITS</span>
+            </div>
+          </div>
 
           {/* Sub */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
-            className="text-white/60 text-lg max-w-lg mb-10 leading-relaxed"
-          >
+          <p className="hero-sub opacity-0 text-white/60 text-lg max-w-lg mb-10 leading-relaxed">
             {SITE_CONFIG.subTagline}
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex flex-wrap gap-4"
-          >
+          <div className="flex flex-wrap gap-4">
             <button
               onClick={() => {
                 document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="btn-glow animate-glow-pulse text-base"
+              className="hero-cta opacity-0 btn-glow animate-glow-pulse text-base"
             >
               <span>JOIN NOW</span>
             </button>
@@ -85,7 +154,7 @@ export default function HeroSection() {
               href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${SITE_CONFIG.whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-outline flex items-center gap-2 text-base"
+              className="hero-cta opacity-0 btn-outline flex items-center gap-2 text-base"
             >
               {/* WhatsApp Icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -94,26 +163,21 @@ export default function HeroSection() {
               </svg>
               WHATSAPP CHAT
             </a>
-          </motion.div>
+          </div>
 
           {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="flex gap-8 mt-16 pt-8 border-t border-white/10"
-          >
+          <div ref={statsRef} className="flex gap-8 mt-16 pt-8 border-t border-white/10">
             {[
               { num: "12+", label: "Years" },
               { num: "3.5K+", label: "Members" },
               { num: "25+", label: "Trainers" },
             ].map(({ num, label }) => (
-              <div key={label}>
-                <div className="font-heading text-3xl text-yellow-500">{num}</div>
+              <div key={label} className="hero-stat opacity-0">
+                <div className="font-heading text-3xl text-yellow-500 glow-yellow-text">{num}</div>
                 <div className="text-white/40 text-xs tracking-widest uppercase mt-1">{label}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -121,7 +185,7 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 3.5 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
         <span className="text-white/30 text-xs tracking-[0.3em] uppercase">Scroll</span>
@@ -134,17 +198,37 @@ export default function HeroSection() {
         </div>
       </motion.div>
 
-      {/* Decorative corner element */}
+      {/* Decorative floating gym elements */}
       <div className="absolute top-24 right-8 md:right-16 z-10 hidden md:block">
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="w-24 h-24 border border-yellow-500/20 rotate-45 relative"
+          initial={{ opacity: 0, scale: 0, rotate: 0 }}
+          animate={{ opacity: 1, scale: 1, rotate: 45 }}
+          transition={{ delay: 3, duration: 0.8, ease: "backOut" }}
+          className="w-24 h-24 border border-yellow-500/20 relative"
         >
-          <div className="absolute inset-3 border border-yellow-500/10 rotate-0" />
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-3 border border-yellow-500/10"
+          />
         </motion.div>
       </div>
+
+      {/* Floating dumbbell decoration */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.06 }}
+        transition={{ delay: 3 }}
+        className="absolute bottom-32 right-20 hidden lg:block animate-float"
+      >
+        <svg width="120" height="50" viewBox="0 0 120 50" fill="#ffc107">
+          <rect x="0" y="12" width="15" height="26" rx="3"/>
+          <rect x="15" y="8" width="8" height="34" rx="2"/>
+          <rect x="23" y="21" width="74" height="8" rx="2"/>
+          <rect x="97" y="8" width="8" height="34" rx="2"/>
+          <rect x="105" y="12" width="15" height="26" rx="3"/>
+        </svg>
+      </motion.div>
     </section>
   );
 }

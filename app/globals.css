@@ -21,12 +21,22 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
 }
 
 body {
   background: #000;
   overflow-x: hidden;
+}
+
+/* Hide default cursor on desktop when custom cursor is active */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, input, textarea, select, [role="button"] {
+    cursor: none;
+  }
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────── */
@@ -53,8 +63,8 @@ body {
 
   .bg-glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
   }
 
@@ -63,7 +73,7 @@ body {
   }
 
   .glow-yellow-text {
-    text-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+    text-shadow: 0 0 30px rgba(255, 193, 7, 0.6), 0 0 60px rgba(255, 193, 7, 0.2);
   }
 
   .gradient-yellow-black {
@@ -86,6 +96,152 @@ body {
   }
 }
 
+/* ─── Glitch Text Effect ────────────────────────────────────── */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-text.glitch-active::before,
+.glitch-text.glitch-active::after {
+  animation: glitchFlicker 3s infinite;
+}
+
+.glitch-text.glitch-active::before {
+  color: #ff0000;
+  clip-path: inset(20% 0 40% 0);
+  animation-delay: 0s;
+}
+
+.glitch-text.glitch-active::after {
+  color: #00ffff;
+  clip-path: inset(60% 0 10% 0);
+  animation-delay: 0.15s;
+}
+
+@keyframes glitchFlicker {
+  0%, 95%, 100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  96% {
+    opacity: 0.8;
+    transform: translateX(-3px);
+  }
+  97% {
+    opacity: 0.8;
+    transform: translateX(3px);
+  }
+  98% {
+    opacity: 0;
+    transform: translateX(-1px);
+  }
+  99% {
+    opacity: 0.5;
+    transform: translateX(2px);
+  }
+}
+
+/* ─── Shimmer / Scanning Line ────────────────────────────────── */
+.shimmer-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 193, 7, 0.1),
+    transparent
+  );
+  animation: shimmerSweep 3s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+  0% { left: -50%; }
+  100% { left: 150%; }
+}
+
+/* ─── Energy Pulse Ring ──────────────────────────────────────── */
+@keyframes energyPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.3);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+  }
+}
+
+.energy-pulse {
+  animation: energyPulse 2s ease-out infinite;
+}
+
+/* ─── Magnetic Hover ─────────────────────────────────────────── */
+.magnetic-hover {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.magnetic-hover:hover {
+  transform: translateY(-3px);
+}
+
+/* ─── Reveal Animation Base ──────────────────────────────────── */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Glow Border Animation ──────────────────────────────────── */
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(255, 193, 7, 0.1);
+  }
+  50% {
+    border-color: rgba(255, 193, 7, 0.4);
+  }
+}
+
+.glow-border-pulse {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* ─── Floating Animation ─────────────────────────────────────── */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: floatY 4s ease-in-out infinite;
+}
+
 /* ─── Glow Button ─────────────────────────────────────────────── */
 .btn-glow {
   position: relative;
@@ -96,7 +252,7 @@ body {
   font-size: 1.1rem;
   padding: 14px 36px;
   border: none;
-  cursor: pointer;
+  cursor: none;
   overflow: hidden;
   transition: all 0.3s ease;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
@@ -125,6 +281,27 @@ body {
   z-index: 1;
 }
 
+/* Ripple effect */
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s, height 0.5s, opacity 0.5s;
+  opacity: 0;
+}
+
+.btn-glow:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+
 /* ─── Outline Button ─────────────────────────────────────────── */
 .btn-outline {
   position: relative;
@@ -135,7 +312,7 @@ body {
   font-size: 1.1rem;
   padding: 13px 36px;
   border: 1px solid rgba(255, 193, 7, 0.5);
-  cursor: pointer;
+  cursor: none;
   transition: all 0.3s ease;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
 }
@@ -179,6 +356,23 @@ body {
 .countdown-unit {
   background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
   border: 1px solid rgba(255, 193, 7, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-unit::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 0deg 350deg, rgba(255,193,7,0.1) 350deg 360deg);
+  animation: rotateScan 4s linear infinite;
+}
+
+@keyframes rotateScan {
+  100% { transform: rotate(360deg); }
 }
 
 /* ─── Masonry Gallery ────────────────────────────────────────── */
@@ -229,10 +423,15 @@ body {
 }
 
 /* ─── Form Focus ─────────────────────────────────────────────── */
+.form-input {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 .form-input:focus {
   outline: none;
   border-color: #ffc107;
-  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1), 0 0 20px rgba(255, 193, 7, 0.05);
+  background: rgba(255, 193, 7, 0.03) !important;
 }
 
 /* ─── Animated Underline ─────────────────────────────────────── */
@@ -244,14 +443,120 @@ body {
   content: "";
   position: absolute;
   bottom: -4px;
-  left: 0;
+  left: 50%;
   width: 0;
   height: 2px;
-  background: #ffc107;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, transparent, #ffc107, transparent);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateX(-50%);
 }
 
 .nav-link:hover::after,
 .nav-link.active::after {
   width: 100%;
 }
+
+/* ─── Animated Section Divider Line ──────────────────────────── */
+.animated-divider {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.animated-divider::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #ffc107 50%, transparent);
+  animation: divideSweep 3s ease-in-out infinite;
+}
+
+@keyframes divideSweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ─── Gym Equipment Background Shapes ────────────────────────── */
+@keyframes kettlebellSwing {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+.kettlebell-swing {
+  animation: kettlebellSwing 3s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* ─── Gradient Glow Orbs ─────────────────────────────────────── */
+@keyframes orbFloat {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+  33% { 
+    transform: translate(30px, -20px) scale(1.1);
+    opacity: 0.25;
+  }
+  66% { 
+    transform: translate(-20px, 10px) scale(0.9);
+    opacity: 0.1;
+  }
+}
+
+.glow-orb {
+  animation: orbFloat 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.glow-orb-delay {
+  animation: orbFloat 10s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+/* ─── Card Shine Sweep ───────────────────────────────────────── */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(255, 193, 7, 0.03) 45%,
+    rgba(255, 193, 7, 0.06) 50%,
+    rgba(255, 193, 7, 0.03) 55%,
+    transparent 60%
+  );
+  transform: rotate(0deg);
+  transition: transform 0.7s;
+  pointer-events: none;
+}
+
+.card-shine:hover::before {
+  transform: rotate(180deg);
+}
+
+/* ─── Stagger children on view ───────────────────────────────── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stagger-children.in-view > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+.stagger-children.in-view > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+.stagger-children.in-view > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+.stagger-children.in-view > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+.stagger-children.in-view > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+.stagger-children.in-view > *:nth-child(6) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }

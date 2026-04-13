@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Barlow } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/effects/SmoothScroll";
+import CustomCursor from "@/components/effects/CustomCursor";
+import LoadingScreen from "@/components/effects/LoadingScreen";
 
 // Bold display font for headings — cinematic and powerful
 const bebasNeue = Bebas_Neue({
@@ -19,9 +22,9 @@ const barlow = Barlow({
 });
 
 export const metadata: Metadata = {
-  title: "Elite Gains Gym | Push Beyond Your Limits",
+  title: "One Rep Max | Push Beyond Your Limits",
   description:
-    "Elite Gains is a premium high-performance gym designed for athletes who demand the absolute best from their training environment. Join now and transform your body.",
+    "One Rep Max is a premium high-performance gym designed for athletes who demand the absolute best from their training environment. Join now and transform your body.",
   keywords: [
     "gym",
     "fitness",
@@ -30,9 +33,10 @@ export const metadata: Metadata = {
     "weight training",
     "bodybuilding",
     "premium gym",
+    "one rep max",
   ],
   openGraph: {
-    title: "Elite Gains Gym | Push Beyond Your Limits",
+    title: "One Rep Max | Push Beyond Your Limits",
     description: "Premium high-performance training facility. Join now.",
     type: "website",
   },
@@ -44,11 +48,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <body
         className={`${bebasNeue.variable} ${barlow.variable} font-body bg-black text-white antialiased`}
       >
-        {children}
+        <LoadingScreen />
+        <CustomCursor />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

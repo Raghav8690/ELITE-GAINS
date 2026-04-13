@@ -8,23 +8,36 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-dark-800 border-t border-yellow-500/10">
+    <footer className="bg-dark-800 border-t border-yellow-500/10 relative overflow-hidden">
+      {/* Animated gradient line at top */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] overflow-hidden">
+        <motion.div
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent"
+        />
+      </div>
+
+      {/* Background decoration */}
+      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-yellow-500/3 blur-[100px] pointer-events-none" />
+
       {/* Main Footer */}
-      <div className="container mx-auto px-6 py-16">
+      <div className="container mx-auto px-6 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-1"
           >
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 bg-yellow-500 flex items-center justify-center">
-                <span className="font-heading text-black text-lg leading-none">EG</span>
+              <div className="w-9 h-9 bg-yellow-500 flex items-center justify-center relative overflow-hidden">
+                <span className="font-heading text-black text-lg leading-none relative z-10">ORM</span>
               </div>
               <span className="font-heading text-xl tracking-widest text-white">
-                ELITE <span className="text-yellow-500">GAINS</span>
+                ONE <span className="text-yellow-500">REP MAX</span>
               </span>
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6">
@@ -38,61 +51,77 @@ export default function Footer() {
                 { icon: Facebook, href: SITE_CONFIG.socialLinks.facebook, label: "Facebook" },
                 { icon: Youtube, href: SITE_CONFIG.socialLinks.youtube, label: "YouTube" },
                 { icon: Twitter, href: SITE_CONFIG.socialLinks.twitter, label: "Twitter" },
-              ].map(({ icon: Icon, href, label }) => (
-                <a
+              ].map(({ icon: Icon, href, label }, i) => (
+                <motion.a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 bg-glass border border-white/10 flex items-center justify-center text-white/50 hover:text-yellow-500 hover:border-yellow-500/50 transition-all duration-300 hover:glow-yellow"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
+                  whileHover={{ y: -3 }}
+                  className="w-9 h-9 bg-glass border border-white/10 flex items-center justify-center text-white/50 hover:text-yellow-500 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,193,7,0.2)]"
                 >
                   <Icon size={16} />
-                </a>
+                </motion.a>
               ))}
             </div>
           </motion.div>
 
           {/* Quick Links */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <h4 className="font-heading tracking-widest text-white text-lg mb-5">
               QUICK NAVIGATION
             </h4>
             <ul className="space-y-3">
-              {NAV_LINKS.map((link) => (
-                <li key={link.label}>
+              {NAV_LINKS.map((link, i) => (
+                <motion.li
+                  key={link.label}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.15 + i * 0.05 }}
+                >
                   <a
                     href={link.href}
-                    className="text-white/50 text-sm hover:text-yellow-500 transition-colors flex items-center gap-2 group"
+                    className="text-white/50 text-sm hover:text-yellow-500 transition-all duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-4 h-[1px] bg-yellow-500/30 group-hover:bg-yellow-500 group-hover:w-6 transition-all duration-300" />
                     {link.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
-              <li>
+              <motion.li
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.15 + NAV_LINKS.length * 0.05 }}
+              >
                 <a
                   href="#contact"
-                  className="text-white/50 text-sm hover:text-yellow-500 transition-colors flex items-center gap-2 group"
+                  className="text-white/50 text-sm hover:text-yellow-500 transition-all duration-300 flex items-center gap-2 group"
                 >
                   <span className="w-4 h-[1px] bg-yellow-500/30 group-hover:bg-yellow-500 group-hover:w-6 transition-all duration-300" />
                   Contact
                 </a>
-              </li>
+              </motion.li>
             </ul>
           </motion.div>
 
           {/* Member Support */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.15 }}
+            transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <h4 className="font-heading tracking-widest text-white text-lg mb-5">
               MEMBER SUPPORT
@@ -149,13 +178,13 @@ export default function Footer() {
 
           {/* Google Maps Embed */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <h4 className="font-heading tracking-widest text-white text-lg mb-5">FIND US</h4>
-            <div className="relative overflow-hidden rounded-sm border border-yellow-500/20 h-48">
+            <div className="relative overflow-hidden rounded-sm border border-yellow-500/20 h-48 group">
               <iframe
                 src={SITE_CONFIG.mapEmbedUrl}
                 width="100%"
@@ -164,27 +193,29 @@ export default function Footer() {
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Elite Gains Location"
+                title="One Rep Max Location"
               />
+              {/* Hover glow */}
+              <div className="absolute inset-0 border border-transparent group-hover:border-yellow-500/30 transition-all duration-500 pointer-events-none" />
             </div>
           </motion.div>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 relative z-10">
         <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/30 text-xs">
-            © {currentYear} ELITE GAINS GYM. All rights reserved.
+            © {currentYear} ONE REP MAX. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-white/30 text-xs hover:text-white/60 transition-colors">
+            <a href="#" className="text-white/30 text-xs hover:text-yellow-500/60 transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-white/30 text-xs hover:text-white/60 transition-colors">
+            <a href="#" className="text-white/30 text-xs hover:text-yellow-500/60 transition-colors">
               Terms of Service
             </a>
-            <a href="#" className="text-white/30 text-xs hover:text-white/60 transition-colors">
+            <a href="#" className="text-white/30 text-xs hover:text-yellow-500/60 transition-colors">
               Cookie Policy
             </a>
           </div>

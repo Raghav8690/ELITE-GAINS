@@ -8,10 +8,12 @@ import GallerySection from "@/components/sections/GallerySection";
 import ContactSection from "@/components/sections/ContactSection";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import ParticleCanvas from "@/components/effects/ParticleCanvas";
 
 export default function Home() {
   return (
-    <main className="bg-black min-h-screen">
+    <main className="bg-black min-h-screen relative">
+      <ParticleCanvas />
       <Navbar />
       <HeroSection />
       <AboutSection />
